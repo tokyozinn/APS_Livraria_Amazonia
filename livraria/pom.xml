@@ -7,6 +7,10 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Livraria Amazônia</name>
 	<description>APS dos alunos André Yabiku e Lucas Torres do 4º semestre de Sistemas de Informação, UNIP - Swift</description>
+	<properties>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
