@@ -62,13 +62,16 @@ public class principal {
 		initialize();
 
 	}
-	
+
 	ControllerAutor ctrlAutor = new ControllerAutor();
 	ControllerLivros ctrlLivro = new ControllerLivros();
 	ControllerEditora ctrlEditora = new ControllerEditora();
 	private JTable table;
 	private JTextField inputNomeCompletoAutor;
 	private JTextField inputIsbnLivroDeletar;
+	private JTextField inputIsbnAlterar;
+	private JTextField fieldNomeAlterar;
+	private JTextField fieldPrecoAlterar;
 
 	/**
 	 * Initialize the contents of the frame.
@@ -91,16 +94,16 @@ public class principal {
 		JPanel painelLista = new JPanel();
 		tabbedPane.addTab("Lista", null, painelLista, null);
 		painelLista.setLayout(null);
-		
+
 		JButton btnShowData = new JButton("Update");
 		btnShowData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ResultSet rs = ctrlLivro.listagemLivros();
-				DefaultTableModel tm = (DefaultTableModel)table.getModel();
+				DefaultTableModel tm = (DefaultTableModel) table.getModel();
 				tm.setRowCount(0);
 				try {
-					while(rs.next()) {
-						Object o [] = {rs.getString(1), rs.getDouble(2), rs.getString(3), rs.getInt(4)};
+					while (rs.next()) {
+						Object o[] = { rs.getString(1), rs.getDouble(2), rs.getString(3), rs.getInt(4) };
 						tm.addRow(o);
 					}
 				} catch (SQLException e1) {
@@ -110,15 +113,15 @@ public class principal {
 		});
 		btnShowData.setBounds(359, 240, 150, 23);
 		painelLista.add(btnShowData);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 0, 499, 229);
 		painelLista.add(scrollPane);
-		
+
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		JPanel painelLivro = new JPanel();
-		tabbedPane.addTab("Adicionar livro", null, painelLivro, null);
+		tabbedPane.addTab("Livros", null, painelLivro, null);
 		painelLivro.setLayout(null);
 
 		inputNomeLivro = new JTextField();
@@ -163,13 +166,13 @@ public class principal {
 		btnAdicionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Livro l = new Livro();
-				String nomeEditoraComboBox = (String)comboBox.getSelectedItem();
+				String nomeEditoraComboBox = (String) comboBox.getSelectedItem();
 				ctrlLivro.cruzamentoEditoraId(l, nomeEditoraComboBox);
-				
+
 				l.setTitulo(inputNomeLivro.getText());
 				l.setIsbn(inputISBNLivro.getText());
 				l.setPreço(Double.parseDouble(inputPrecoLivro.getText()));
-				
+
 				ctrlLivro.adicionaLivro(l);
 				JOptionPane.showMessageDialog(null, "Livro cadastrado com sucesso!");
 				inputNomeLivro.setText(null);
@@ -181,7 +184,7 @@ public class principal {
 		painelLivro.add(btnAdicionar);
 
 		JPanel painelAutor = new JPanel();
-		tabbedPane.addTab("Adicionar Autor", null, painelAutor, null);
+		tabbedPane.addTab("Autores", null, painelAutor, null);
 		painelAutor.setLayout(null);
 
 		JLabel labelNomeCompletoAutor = new JLabel("Nome Completo");
@@ -200,7 +203,7 @@ public class principal {
 				Autor a = new Autor();
 				a.setNome(inputNomeAutor.getText());
 				a.setNomeCompleto(inputNomeCompletoAutor.getText());
-				
+
 				ctrlAutor.adiciona(a);
 				JOptionPane.showMessageDialog(null, "Autor adicionado com sucesso!");
 				inputNomeAutor.setText(null);
@@ -208,18 +211,18 @@ public class principal {
 			}
 		});
 		painelAutor.add(botaoAdicionaAutor);
-		
+
 		inputNomeCompletoAutor = new JTextField();
 		inputNomeCompletoAutor.setColumns(10);
 		inputNomeCompletoAutor.setBounds(141, 80, 125, 20);
 		painelAutor.add(inputNomeCompletoAutor);
-		
+
 		JLabel labelNomeAutor = new JLabel("Nome");
 		labelNomeAutor.setBounds(106, 34, 28, 14);
 		painelAutor.add(labelNomeAutor);
 
 		JPanel painelEditora = new JPanel();
-		tabbedPane.addTab("Adicionar Editora", null, painelEditora, null);
+		tabbedPane.addTab("Editoras", null, painelEditora, null);
 		painelEditora.setLayout(null);
 
 		JLabel labelNomeEditora = new JLabel("Nome");
@@ -246,7 +249,7 @@ public class principal {
 				Editora edi = new Editora();
 				edi.setNome(inputNomeEditora.getText());
 				edi.setUrl(inputUrlEditora.getText());
-				
+
 				ctrlEditora.adiciona(edi);
 				JOptionPane.showMessageDialog(null, "Editora adicionada com sucesso!");
 				inputNomeEditora.setText(null);
@@ -256,46 +259,128 @@ public class principal {
 		});
 		botaoAdicionaEditora.setBounds(153, 145, 89, 23);
 		painelEditora.add(botaoAdicionaEditora);
-		
+
 		JPanel Excluir = new JPanel();
 		tabbedPane.addTab("Deletar", null, Excluir, null);
 		Excluir.setLayout(null);
-		
+
 		inputIsbnLivroDeletar = new JTextField();
 		inputIsbnLivroDeletar.setBounds(129, 60, 176, 20);
 		Excluir.add(inputIsbnLivroDeletar);
 		inputIsbnLivroDeletar.setColumns(10);
-		
+
 		JLabel lblDigiteOIsbn = new JLabel("Digite o ISBN do livro que deseja remover");
 		lblDigiteOIsbn.setBounds(119, 29, 202, 27);
 		Excluir.add(lblDigiteOIsbn);
-		
+
 		JButton btnDeletar = new JButton("Deletar");
 		btnDeletar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(JOptionPane.showConfirmDialog(null, "Tem certeza que deseja deletar o livro?")==0) {
+				if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja deletar o livro?") == 0) {
 					ctrlLivro.remove(inputIsbnLivroDeletar.getText());
 					JOptionPane.showMessageDialog(null, "Livro removido com sucesso!");
 					inputIsbnLivroDeletar.setText(null);
-				};
+				}
+				;
 			}
 		});
 		btnDeletar.setBounds(174, 148, 89, 23);
 		Excluir.add(btnDeletar);
+		
+		JPanel panel = new JPanel();
+		tabbedPane.addTab("Alterar", null, panel, null);
+		panel.setLayout(null);
+		
+		inputIsbnAlterar = new JTextField();
+		inputIsbnAlterar.setBounds(194, 64, 96, 20);
+		panel.add(inputIsbnAlterar);
+		inputIsbnAlterar.setColumns(10);
+		
+		JLabel lblDigiteOIsbn_1 = new JLabel("Digite o ISBN do livro que deseja alterar");
+		lblDigiteOIsbn_1.setBounds(142, 27, 217, 14);
+		panel.add(lblDigiteOIsbn_1);
+		
+		final JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setBounds(306, 186, 96, 22);
+		panel.add(comboBox_1);
+		
+		
+		JButton btnGo = new JButton("Go!");
+		btnGo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ResultSet rs = ctrlLivro.seleciona(inputIsbnAlterar.getText());
+				try {
+					while(rs.next()) {
+						fieldNomeAlterar.setText(rs.getString(1));
+						fieldPrecoAlterar.setText(Double.toString(rs.getDouble(2)));
+						configuraComboBox(comboBox_1);
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnGo.setBounds(194, 112, 89, 23);
+		panel.add(btnGo);
+		
+		fieldNomeAlterar = new JTextField();
+		fieldNomeAlterar.setBounds(39, 187, 96, 20);
+		panel.add(fieldNomeAlterar);
+		fieldNomeAlterar.setColumns(10);
+		
+		fieldPrecoAlterar = new JTextField();
+		fieldPrecoAlterar.setBounds(169, 187, 96, 20);
+		panel.add(fieldPrecoAlterar);
+		fieldPrecoAlterar.setColumns(10);
+		
+
+		JButton btnAlterar = new JButton("Alterar");
+		btnAlterar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String s1 = fieldNomeAlterar.getText();
+				String s2 = fieldPrecoAlterar.getText();
+				Integer s3 = ctrlLivro.retornaId((String)comboBox_1.getSelectedItem());
+				String s4 = inputIsbnAlterar.getText();
+				
+				try {
+					ctrlLivro.altera(s1, s2, s3, s4);
+					JOptionPane.showMessageDialog(null, "Livro alterado com sucesso!");
+					fieldNomeAlterar.setText(null);
+					fieldPrecoAlterar.setText(null);
+					inputIsbnAlterar.setText(null);
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null, e2.getMessage());
+				}
+				}
+		});
+		btnAlterar.setBounds(430, 186, 89, 23);
+		panel.add(btnAlterar);
+		
+		JLabel lblNome_1 = new JLabel("Nome");
+		lblNome_1.setBounds(64, 162, 48, 14);
+		panel.add(lblNome_1);
+		
+		JLabel lblPreo_1 = new JLabel("Preço");
+		lblPreo_1.setBounds(194, 162, 48, 14);
+		panel.add(lblPreo_1);
+		
+		JLabel lblEditora_1 = new JLabel("Editora");
+		lblEditora_1.setBounds(334, 162, 48, 14);
+		panel.add(lblEditora_1);
 	}
-	
+
 	private void configuraComboBox(JComboBox comboBox) {
 		try {
 			comboBox.removeAllItems();
 			ResultSet rs = ctrlEditora.listagemEditoras();
-			while(rs.next()) {
+			while (rs.next()) {
 				String abc = rs.getString(2);
 				comboBox.addItem(abc);
 			}
-			} catch (Exception e) {
-				e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
+
 	}
 
 	private void createListTable() {
@@ -305,15 +390,10 @@ public class principal {
 		model.addColumn("ISBN");
 		model.addColumn("Id Editora");
 		ResultSet rs = ctrlLivro.listagemLivros();
-		
+
 		try {
-			while(rs.next()) {
-				model.addRow(new Object[] {
-						rs.getString(1),
-						rs.getDouble(2),
-						rs.getString(3),
-						rs.getInt(4)
-				});
+			while (rs.next()) {
+				model.addRow(new Object[] { rs.getString(1), rs.getDouble(2), rs.getString(3), rs.getInt(4) });
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

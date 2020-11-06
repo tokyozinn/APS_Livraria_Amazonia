@@ -42,4 +42,16 @@ public class ControllerLivros {
 	public void remove(String s) {
 		dao.removeLivro(s);
 	}
+	
+	public ResultSet seleciona(String s) {
+		return dao.selecionaLivro(s);
+	}
+	
+	public void altera(String s1, String s2, Integer s3, String s4) {
+		dao.alteraLivro(s1, s2, s3, s4);
+	}
+	
+	public Integer retornaId(String s) {
+		return dao.retornaId(s);
+	}
 }
