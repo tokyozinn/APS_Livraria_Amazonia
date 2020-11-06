@@ -5,7 +5,7 @@ public class Livro {
 	private String titulo;
 	private String isbn;
 	private Integer idEditora;
-	private Double preço;
+	private Double preco;
 	
 	public String getTitulo() {
 		return titulo;
@@ -25,11 +25,11 @@ public class Livro {
 	public void setId_editora(Integer id_editora) {
 		this.idEditora = id_editora;
 	}
-	public Double getPreço() {
-		return preço;
+	public Double getPreco() {
+		return preco;
 	}
-	public void setPreço(Double preço) {
-		this.preço = preço;
+	public void setPreço(Double preco) {
+		this.preco = preco;
 	}
 
 }

@@ -1,34 +1,43 @@
 package view;
 
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import dao.LivroDAO;
-import javax.swing.DefaultComboBoxModel;
+import controller.ControllerAutor;
+import controller.ControllerEditora;
+import controller.ControllerLivros;
+import model.Autor;
+import model.Editora;
+import model.Livro;
 
 public class principal {
 
 	private JFrame frame;
-	private JTextField textField;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_1;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTable table;
+	private JTextField inputNomeLivro;
+	private JTextField inputISBNLivro;
+	private JTextField inputPrecoLivro;
+	private JTextField inputNomeAutor;
+	private JTextField inputNomeEditora;
+	private JTextField inputUrlEditora;
 
 	/**
 	 * Launch the application.
@@ -51,14 +60,28 @@ public class principal {
 	 */
 	public principal() {
 		initialize();
+
 	}
+	
+	ControllerAutor ctrlAutor = new ControllerAutor();
+	ControllerLivros ctrlLivro = new ControllerLivros();
+	ControllerEditora ctrlEditora = new ControllerEditora();
+	private JTable table;
+	private JTextField inputNomeCompletoAutor;
+	private JTextField inputIsbnLivroDeletar;
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				createListTable();
+			}
+		});
+		frame.setBounds(100, 100, 540, 341);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS));
 
@@ -67,32 +90,51 @@ public class principal {
 
 		JPanel painelLista = new JPanel();
 		tabbedPane.addTab("Lista", null, painelLista, null);
-		painelLista.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-
-		table = new JTable();
-		table.setModel(new DefaultTableModel(new Object[][] { { "Nome", "Autor", "Editora" }, },
-				new String[] { "New Column", "New column", "New column" }));
+		painelLista.setLayout(null);
 		
-		painelLista.add(table);
-
+		JButton btnShowData = new JButton("Update");
+		btnShowData.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ResultSet rs = ctrlLivro.listagemLivros();
+				DefaultTableModel tm = (DefaultTableModel)table.getModel();
+				tm.setRowCount(0);
+				try {
+					while(rs.next()) {
+						Object o [] = {rs.getString(1), rs.getDouble(2), rs.getString(3), rs.getInt(4)};
+						tm.addRow(o);
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnShowData.setBounds(359, 240, 150, 23);
+		painelLista.add(btnShowData);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 0, 499, 229);
+		painelLista.add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
 		JPanel painelLivro = new JPanel();
 		tabbedPane.addTab("Adicionar livro", null, painelLivro, null);
 		painelLivro.setLayout(null);
 
-		textField = new JTextField();
-		textField.setBounds(77, 22, 96, 20);
-		painelLivro.add(textField);
-		textField.setColumns(10);
+		inputNomeLivro = new JTextField();
+		inputNomeLivro.setBounds(77, 22, 96, 20);
+		painelLivro.add(inputNomeLivro);
+		inputNomeLivro.setColumns(10);
 
-		textField_2 = new JTextField();
-		textField_2.setBounds(241, 22, 96, 20);
-		painelLivro.add(textField_2);
-		textField_2.setColumns(10);
+		inputISBNLivro = new JTextField();
+		inputISBNLivro.setBounds(241, 22, 96, 20);
+		painelLivro.add(inputISBNLivro);
+		inputISBNLivro.setColumns(10);
 
-		textField_3 = new JTextField();
-		textField_3.setBounds(241, 76, 96, 20);
-		painelLivro.add(textField_3);
-		textField_3.setColumns(10);
+		inputPrecoLivro = new JTextField();
+		inputPrecoLivro.setBounds(241, 76, 96, 20);
+		painelLivro.add(inputPrecoLivro);
+		inputPrecoLivro.setColumns(10);
 
 		JLabel lblNome = new JLabel("Nome");
 		lblNome.setBounds(77, 11, 48, 14);
@@ -110,56 +152,172 @@ public class principal {
 		lblPreo.setBounds(241, 64, 48, 14);
 		painelLivro.add(lblPreo);
 
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"oi", "teste"}));
+		final JComboBox comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel());
+		configuraComboBox(comboBox);
+
 		comboBox.setBounds(77, 75, 96, 22);
 		painelLivro.add(comboBox);
 
 		JButton btnAdicionar = new JButton("Adicionar");
+		btnAdicionar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Livro l = new Livro();
+				String nomeEditoraComboBox = (String)comboBox.getSelectedItem();
+				ctrlLivro.cruzamentoEditoraId(l, nomeEditoraComboBox);
+				
+				l.setTitulo(inputNomeLivro.getText());
+				l.setIsbn(inputISBNLivro.getText());
+				l.setPreço(Double.parseDouble(inputPrecoLivro.getText()));
+				
+				ctrlLivro.adicionaLivro(l);
+				JOptionPane.showMessageDialog(null, "Livro cadastrado com sucesso!");
+				inputNomeLivro.setText(null);
+				inputPrecoLivro.setText(null);
+				inputISBNLivro.setText(null);
+			}
+		});
 		btnAdicionar.setBounds(161, 159, 89, 23);
 		painelLivro.add(btnAdicionar);
 
 		JPanel painelAutor = new JPanel();
 		tabbedPane.addTab("Adicionar Autor", null, painelAutor, null);
+		painelAutor.setLayout(null);
 
-		JLabel lblNome_1 = new JLabel("Nome");
-		painelAutor.add(lblNome_1);
+		JLabel labelNomeCompletoAutor = new JLabel("Nome Completo");
+		labelNomeCompletoAutor.setBounds(55, 83, 79, 14);
+		painelAutor.add(labelNomeCompletoAutor);
 
-		textField_1 = new JTextField();
-		painelAutor.add(textField_1);
-		textField_1.setColumns(10);
+		inputNomeAutor = new JTextField();
+		inputNomeAutor.setBounds(141, 31, 125, 20);
+		painelAutor.add(inputNomeAutor);
+		inputNomeAutor.setColumns(10);
 
-		JButton btnNewButton = new JButton("Adicionar");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton botaoAdicionaAutor = new JButton("Adicionar");
+		botaoAdicionaAutor.setBounds(158, 142, 79, 23);
+		botaoAdicionaAutor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Autor a = new Autor();
+				a.setNome(inputNomeAutor.getText());
+				a.setNomeCompleto(inputNomeCompletoAutor.getText());
+				
+				ctrlAutor.adiciona(a);
+				JOptionPane.showMessageDialog(null, "Autor adicionado com sucesso!");
+				inputNomeAutor.setText(null);
+				inputNomeCompletoAutor.setText(null);
 			}
 		});
-		painelAutor.add(btnNewButton);
+		painelAutor.add(botaoAdicionaAutor);
+		
+		inputNomeCompletoAutor = new JTextField();
+		inputNomeCompletoAutor.setColumns(10);
+		inputNomeCompletoAutor.setBounds(141, 80, 125, 20);
+		painelAutor.add(inputNomeCompletoAutor);
+		
+		JLabel labelNomeAutor = new JLabel("Nome");
+		labelNomeAutor.setBounds(106, 34, 28, 14);
+		painelAutor.add(labelNomeAutor);
 
 		JPanel painelEditora = new JPanel();
 		tabbedPane.addTab("Adicionar Editora", null, painelEditora, null);
 		painelEditora.setLayout(null);
 
-		JLabel lblNome_2 = new JLabel("Nome");
-		lblNome_2.setBounds(153, 9, 28, 14);
-		painelEditora.add(lblNome_2);
+		JLabel labelNomeEditora = new JLabel("Nome");
+		labelNomeEditora.setBounds(153, 9, 28, 14);
+		painelEditora.add(labelNomeEditora);
 
-		JLabel lblUrl = new JLabel("URL");
-		lblUrl.setBounds(153, 51, 48, 14);
-		painelEditora.add(lblUrl);
+		JLabel labelUrlEditora = new JLabel("URL");
+		labelUrlEditora.setBounds(153, 51, 48, 14);
+		painelEditora.add(labelUrlEditora);
 
-		textField_4 = new JTextField();
-		textField_4.setBounds(191, 6, 96, 20);
-		painelEditora.add(textField_4);
-		textField_4.setColumns(10);
+		inputNomeEditora = new JTextField();
+		inputNomeEditora.setBounds(191, 6, 96, 20);
+		painelEditora.add(inputNomeEditora);
+		inputNomeEditora.setColumns(10);
 
-		textField_5 = new JTextField();
-		textField_5.setBounds(191, 48, 96, 20);
-		painelEditora.add(textField_5);
-		textField_5.setColumns(10);
+		inputUrlEditora = new JTextField();
+		inputUrlEditora.setBounds(191, 48, 96, 20);
+		painelEditora.add(inputUrlEditora);
+		inputUrlEditora.setColumns(10);
 
-		JButton btnAdicionar_1 = new JButton("Adicionar");
-		btnAdicionar_1.setBounds(153, 145, 89, 23);
-		painelEditora.add(btnAdicionar_1);
+		JButton botaoAdicionaEditora = new JButton("Adicionar");
+		botaoAdicionaEditora.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Editora edi = new Editora();
+				edi.setNome(inputNomeEditora.getText());
+				edi.setUrl(inputUrlEditora.getText());
+				
+				ctrlEditora.adiciona(edi);
+				JOptionPane.showMessageDialog(null, "Editora adicionada com sucesso!");
+				inputNomeEditora.setText(null);
+				inputUrlEditora.setText(null);
+				configuraComboBox(comboBox);
+			}
+		});
+		botaoAdicionaEditora.setBounds(153, 145, 89, 23);
+		painelEditora.add(botaoAdicionaEditora);
+		
+		JPanel Excluir = new JPanel();
+		tabbedPane.addTab("Deletar", null, Excluir, null);
+		Excluir.setLayout(null);
+		
+		inputIsbnLivroDeletar = new JTextField();
+		inputIsbnLivroDeletar.setBounds(129, 60, 176, 20);
+		Excluir.add(inputIsbnLivroDeletar);
+		inputIsbnLivroDeletar.setColumns(10);
+		
+		JLabel lblDigiteOIsbn = new JLabel("Digite o ISBN do livro que deseja remover");
+		lblDigiteOIsbn.setBounds(119, 29, 202, 27);
+		Excluir.add(lblDigiteOIsbn);
+		
+		JButton btnDeletar = new JButton("Deletar");
+		btnDeletar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(JOptionPane.showConfirmDialog(null, "Tem certeza que deseja deletar o livro?")==0) {
+					ctrlLivro.remove(inputIsbnLivroDeletar.getText());
+					JOptionPane.showMessageDialog(null, "Livro removido com sucesso!");
+					inputIsbnLivroDeletar.setText(null);
+				};
+			}
+		});
+		btnDeletar.setBounds(174, 148, 89, 23);
+		Excluir.add(btnDeletar);
+	}
+	
+	private void configuraComboBox(JComboBox comboBox) {
+		try {
+			comboBox.removeAllItems();
+			ResultSet rs = ctrlEditora.listagemEditoras();
+			while(rs.next()) {
+				String abc = rs.getString(2);
+				comboBox.addItem(abc);
+			}
+			} catch (Exception e) {
+				e.printStackTrace();
+		}
+		
+	}
+
+	private void createListTable() {
+		DefaultTableModel model = new DefaultTableModel();
+		model.addColumn("Titulo");
+		model.addColumn("Preço");
+		model.addColumn("ISBN");
+		model.addColumn("Id Editora");
+		ResultSet rs = ctrlLivro.listagemLivros();
+		
+		try {
+			while(rs.next()) {
+				model.addRow(new Object[] {
+						rs.getString(1),
+						rs.getDouble(2),
+						rs.getString(3),
+						rs.getInt(4)
+				});
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		table.setModel(model);
 	}
 }

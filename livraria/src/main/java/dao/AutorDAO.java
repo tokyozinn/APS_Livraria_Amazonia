@@ -5,22 +5,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import model.Editora;
+import model.Autor;
 
-public class EditoraDAO extends DAORoot{
+public class AutorDAO extends DAORoot{
 
 	private Connection con;
 	
-	public EditoraDAO() {
+	public AutorDAO() {
 		this.con = abreConexao();
 	}
 	
-	public void adiciona(Editora edi) {
+	public void adiciona(Autor a) {
         try {
-            String sql = "insert into publishers (nome, url) values (?,?)";
+            String sql = "insert into authors (nome, nomeCompleto) values (?,?)";
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, edi.getNome());
-            ps.setString(2, edi.getUrl());
+            ps.setString(1, a.getNome());
+            ps.setString(2, a.getNomeCompleto());
 
             ps.execute();
         } catch (SQLException e) {
@@ -46,4 +46,3 @@ public class EditoraDAO extends DAORoot{
     }
     
 }
-
