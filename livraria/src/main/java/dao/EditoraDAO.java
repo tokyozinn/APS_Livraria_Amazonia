@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 import model.Editora;
 
 public class EditoraDAO extends DAORoot{
@@ -24,6 +26,7 @@ public class EditoraDAO extends DAORoot{
 
             ps.execute();
         } catch (SQLException e) {
+        	JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
             throw new RuntimeException(e);
         }
         
@@ -41,6 +44,7 @@ public class EditoraDAO extends DAORoot{
             rs = ps.getResultSet();
             return rs;
         } catch (SQLException e) {
+        	JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }

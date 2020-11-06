@@ -107,6 +107,7 @@ public class principal {
 						tm.addRow(o);
 					}
 				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, "Erro: " + e1.getMessage());
 					e1.printStackTrace();
 				}
 			}
@@ -316,6 +317,7 @@ public class principal {
 						configuraComboBox(comboBox_1);
 					}
 				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, "Erro: " + e1.getMessage());
 					e1.printStackTrace();
 				}
 			}
@@ -378,6 +380,7 @@ public class principal {
 				comboBox.addItem(abc);
 			}
 		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
 			e.printStackTrace();
 		}
 

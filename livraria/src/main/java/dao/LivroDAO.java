@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.management.RuntimeErrorException;
+import javax.swing.JOptionPane;
 
 import model.Livro;
 
@@ -28,6 +29,7 @@ public class LivroDAO extends DAORoot {
 
             ps.execute();
         } catch (SQLException e) {
+        	JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -43,6 +45,7 @@ public class LivroDAO extends DAORoot {
             rs = ps.getResultSet();
             return rs;
         } catch (SQLException e) {
+        	JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -57,6 +60,7 @@ public class LivroDAO extends DAORoot {
 	    	
 	    	ps.close();
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -73,6 +77,7 @@ public class LivroDAO extends DAORoot {
 	    	rs = ps.getResultSet();
 	    	return rs;
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
 			throw new RuntimeException(e);
 		}    	
     }
@@ -88,6 +93,7 @@ public class LivroDAO extends DAORoot {
 			ps.setString(4,	s4);
 			ps.execute();
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
 			throw new RuntimeException(e);
 		}
     }
@@ -109,6 +115,7 @@ public class LivroDAO extends DAORoot {
 		  	
 		  	return id;
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
 			throw new RuntimeException();
 		}
   
