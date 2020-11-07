@@ -32,11 +32,11 @@ public class AutorDAO extends DAORoot{
         
     }
 	
-    public ResultSet mostraEditoras() {
+    public ResultSet mostraAutores() {
     	
     	ResultSet rs = null;
         try {
-            String sql = "SELECT * FROM publishers";
+            String sql = "SELECT * FROM authors";
             PreparedStatement ps = con.prepareStatement(sql);
             
             ps.execute();

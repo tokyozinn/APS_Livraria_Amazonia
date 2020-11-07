@@ -1,5 +1,7 @@
 package controller;
 
+import java.sql.ResultSet;
+
 import dao.AutorDAO;
 import model.Autor;
 
@@ -11,6 +13,10 @@ public class ControllerAutor {
 	
 	public void adiciona(Autor a) {
 		dao.adiciona(a);
+	}
+	
+	public ResultSet listaAutores() {
+		return dao.mostraAutores();
 	}
 
 }
