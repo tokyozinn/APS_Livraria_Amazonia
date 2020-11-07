@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 import dao.LivroDAO;
 import model.Livro;
 
@@ -44,7 +46,7 @@ public class ControllerLivros {
 	}
 	
 	public ResultSet seleciona(String s) {
-		return dao.selecionaLivro(s);
+			return dao.selecionaLivro(s);	
 	}
 	
 	public void altera(String s1, String s2, Integer s3, String s4) {
