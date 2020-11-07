@@ -107,7 +107,7 @@ public class principal {
 				createListAuthors();
 			}
 		});
-		
+
 		frame.setBounds(100, 100, 800, 450);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new CardLayout(0, 0));
@@ -198,7 +198,7 @@ public class principal {
 		});
 		btnAdicionar.setBounds(350, 300, 100, 30);
 		adicionarLivro.add(btnAdicionar);
-		
+
 		JLabel lblAdicionarUmNovo_1 = new JLabel("Adicionar um novo livro");
 		lblAdicionarUmNovo_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAdicionarUmNovo_1.setBounds(300, 30, 200, 20);
@@ -243,7 +243,7 @@ public class principal {
 		labelNomeAutor.setHorizontalAlignment(SwingConstants.CENTER);
 		labelNomeAutor.setBounds(235, 105, 40, 20);
 		adicionaAutor.add(labelNomeAutor);
-		
+
 		JLabel lblAdicionarUmNovo = new JLabel("Adicionar um novo Autor");
 		lblAdicionarUmNovo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAdicionarUmNovo.setBounds(300, 30, 200, 20);
@@ -289,7 +289,7 @@ public class principal {
 		});
 		botaoAdicionaEditora.setBounds(350, 275, 100, 30);
 		adicionaEditora.add(botaoAdicionaEditora);
-		
+
 		JLabel lblAdicionarUmaNova = new JLabel("Adicionar uma nova Editora");
 		lblAdicionarUmaNova.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAdicionarUmaNova.setBounds(300, 30, 200, 20);
@@ -329,7 +329,7 @@ public class principal {
 		});
 		btnDeletar.setBounds(350, 250, 100, 30);
 		removerLivro.add(btnDeletar);
-		
+
 		JLabel lblRemoverUmLivro = new JLabel("Remover um Livro");
 		lblRemoverUmLivro.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRemoverUmLivro.setBounds(340, 30, 120, 20);
@@ -419,151 +419,247 @@ public class principal {
 		lblEditora_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEditora_1.setBounds(630, 175, 48, 14);
 		alterarLivro.add(lblEditora_1);
-		
+
 		JLabel lblAlterarUmLivro = new JLabel("Alterar um livro");
 		lblAlterarUmLivro.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAlterarUmLivro.setBounds(300, 30, 200, 20);
 		alterarLivro.add(lblAlterarUmLivro);
-		
+
 		final JPanel alteraAutor = new JPanel();
 		frame.getContentPane().add(alteraAutor, "name_82333271296500");
 		alteraAutor.setLayout(null);
-		
+
 		inputIdAutorAlterar = new JTextField();
 		inputIdAutorAlterar.setBounds(300, 100, 200, 30);
 		alteraAutor.add(inputIdAutorAlterar);
 		inputIdAutorAlterar.setColumns(10);
-		
+
 		JLabel lblDigiteONmero = new JLabel("Digite o ID do autor que deseja alterar:");
 		lblDigiteONmero.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDigiteONmero.setBounds(0, 105, 290, 20);
 		alteraAutor.add(lblDigiteONmero);
-		
+
 		JButton botarOkAutorAlterar = new JButton("Ok");
+		botarOkAutorAlterar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ResultSet rs = ctrlAutor.seleciona(Integer.parseInt(inputIdAutorAlterar.getText()));
+				try {
+					if (rs.next()) {
+						inputNomeAutorAlterar.setText(rs.getString(2));
+						inputNomeCompletoAutorAlterar.setText(rs.getString(3));
+					} else {
+						JOptionPane.showMessageDialog(null, "Autor não encontrado");
+					}
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, "Erro: " + e1.getMessage());
+				}
+			}
+		});
+
 		botarOkAutorAlterar.setBounds(575, 100, 100, 30);
 		alteraAutor.add(botarOkAutorAlterar);
-		
+
 		inputNomeAutorAlterar = new JTextField();
 		inputNomeAutorAlterar.setBounds(100, 200, 200, 30);
 		alteraAutor.add(inputNomeAutorAlterar);
 		inputNomeAutorAlterar.setColumns(10);
-		
+
 		inputNomeCompletoAutorAlterar = new JTextField();
 		inputNomeCompletoAutorAlterar.setColumns(10);
 		inputNomeCompletoAutorAlterar.setBounds(500, 200, 200, 30);
 		alteraAutor.add(inputNomeCompletoAutorAlterar);
-		
+
 		JButton botaoAlterarAutor = new JButton("Alterar");
+		botaoAlterarAutor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String s1 = inputNomeAutorAlterar.getText();
+				String s2 = inputNomeCompletoAutorAlterar.getText();
+				Integer i = Integer.parseInt(inputIdAutorAlterar.getText());
+
+				try {
+					ctrlAutor.altera(s1, s2, i);
+					JOptionPane.showMessageDialog(null, "Autor alterado com sucesso!");
+					inputIdAutorAlterar.setText(null);
+					inputNomeAutorAlterar.setText(null);
+					inputNomeCompletoAutorAlterar.setText(null);
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null, e2.getMessage());
+				}
+			}
+
+		});
 		botaoAlterarAutor.setBounds(350, 300, 100, 30);
 		alteraAutor.add(botaoAlterarAutor);
-		
+
 		JLabel lblAlterarUmAutor = new JLabel("Alterar um Autor");
 		lblAlterarUmAutor.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAlterarUmAutor.setBounds(350, 30, 100, 20);
 		alteraAutor.add(lblAlterarUmAutor);
-		
+
 		JLabel lblNome_2 = new JLabel("Nome");
 		lblNome_2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNome_2.setBounds(165, 179, 48, 14);
 		alteraAutor.add(lblNome_2);
-		
+
 		JLabel lblNomeCompleto = new JLabel("Nome Completo");
 		lblNomeCompleto.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNomeCompleto.setBounds(553, 179, 100, 14);
 		alteraAutor.add(lblNomeCompleto);
-		
+
 		final JPanel removeAutor = new JPanel();
 		frame.getContentPane().add(removeAutor, "name_82340885339000");
 		removeAutor.setLayout(null);
-		
+
 		inputIdAutorRemover = new JTextField();
 		inputIdAutorRemover.setBounds(300, 150, 200, 30);
 		removeAutor.add(inputIdAutorRemover);
 		inputIdAutorRemover.setColumns(10);
-		
+
 		JLabel lblDigiteONmero_1 = new JLabel("Digite o número de ID do autor que deseja remover");
 		lblDigiteONmero_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDigiteONmero_1.setBounds(250, 100, 300, 20);
 		removeAutor.add(lblDigiteONmero_1);
-		
+
 		JButton botaoDeletarAutor = new JButton("Deletar");
+		botaoDeletarAutor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja deletar o autor?") == 0) {
+					try {
+						ctrlAutor.remove(Integer.parseInt(inputIdAutorRemover.getText()));
+						JOptionPane.showMessageDialog(null, "Autor removido com sucesso!");
+						inputIdAutorRemover.setText(null);
+					} catch (Exception e1) {
+						e1.getMessage();
+					}
+
+				};
+			}
+		});
 		botaoDeletarAutor.setFont(new Font("Arial", Font.BOLD, 15));
 		botaoDeletarAutor.setForeground(Color.RED);
 		botaoDeletarAutor.setBounds(350, 250, 100, 30);
 		removeAutor.add(botaoDeletarAutor);
-		
+
 		JLabel lblRemoverUmAuttor = new JLabel("Remover um Autor");
 		lblRemoverUmAuttor.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRemoverUmAuttor.setBounds(340, 30, 120, 20);
 		removeAutor.add(lblRemoverUmAuttor);
-		
+
 		final JPanel alteraEditora = new JPanel();
 		frame.getContentPane().add(alteraEditora, "name_82369918733100");
 		alteraEditora.setLayout(null);
-		
+
 		inputIdEditoraAlterar = new JTextField();
 		inputIdEditoraAlterar.setColumns(10);
 		inputIdEditoraAlterar.setBounds(300, 100, 200, 30);
 		alteraEditora.add(inputIdEditoraAlterar);
-		
+
 		JLabel lblDigiteONmero_3 = new JLabel("Digite o ID da editora que deseja alterar:");
 		lblDigiteONmero_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDigiteONmero_3.setBounds(0, 105, 304, 20);
 		alteraEditora.add(lblDigiteONmero_3);
-		
+
 		JButton botaoOkEditoraAlterar = new JButton("Ok");
+		botaoOkEditoraAlterar.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				ResultSet rs = ctrlEditora.seleciona(Integer.parseInt(inputIdEditoraAlterar.getText()));
+				try {
+					if (rs.next()) {
+						inputNomeEditoraAlterar.setText(rs.getString(2));
+						inputUrlEditoraAlterar.setText(rs.getString(3));
+					} else {
+						JOptionPane.showMessageDialog(null, "Autor não encontrado");
+					}
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, "Erro: " + e1.getMessage());
+				}
+			}
+
+		});
 		botaoOkEditoraAlterar.setBounds(575, 100, 100, 30);
 		alteraEditora.add(botaoOkEditoraAlterar);
-		
+
 		inputNomeEditoraAlterar = new JTextField();
 		inputNomeEditoraAlterar.setColumns(10);
 		inputNomeEditoraAlterar.setBounds(100, 200, 200, 30);
 		alteraEditora.add(inputNomeEditoraAlterar);
-		
+
 		inputUrlEditoraAlterar = new JTextField();
 		inputUrlEditoraAlterar.setColumns(10);
 		inputUrlEditoraAlterar.setBounds(500, 200, 200, 30);
 		alteraEditora.add(inputUrlEditoraAlterar);
-		
+
 		JButton botaoEditoraAlterar = new JButton("Alterar");
+		botaoEditoraAlterar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String s1 = inputNomeEditoraAlterar.getText();
+				String s2 = inputUrlEditoraAlterar.getText();
+				Integer i = Integer.parseInt(inputIdEditoraAlterar.getText());
+
+				try {
+					ctrlEditora.altera(s1, s2, i);
+					JOptionPane.showMessageDialog(null, "Dados da editora alterados com sucesso!");
+					inputIdEditoraAlterar.setText(null);
+					inputNomeEditoraAlterar.setText(null);
+					inputUrlEditoraAlterar.setText(null);
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null, e2.getMessage());
+				}
+
+			}
+		});
 		botaoEditoraAlterar.setBounds(350, 300, 100, 30);
 		alteraEditora.add(botaoEditoraAlterar);
-		
+
 		JLabel lblAlterarUmaEditora = new JLabel("Alterar uma Editora");
 		lblAlterarUmaEditora.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAlterarUmaEditora.setBounds(340, 30, 120, 20);
 		alteraEditora.add(lblAlterarUmaEditora);
-		
+
 		JLabel lblNome_3 = new JLabel("Nome");
 		lblNome_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNome_3.setBounds(167, 180, 48, 14);
 		alteraEditora.add(lblNome_3);
-		
+
 		JLabel lblUrl = new JLabel("URL");
 		lblUrl.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUrl.setBounds(575, 180, 48, 14);
 		alteraEditora.add(lblUrl);
-		
+
 		final JPanel removeEditora = new JPanel();
 		frame.getContentPane().add(removeEditora, "name_82463645492900");
 		removeEditora.setLayout(null);
-		
+
 		inputIdEditoraRemover = new JTextField();
 		inputIdEditoraRemover.setBounds(300, 150, 200, 30);
 		removeEditora.add(inputIdEditoraRemover);
 		inputIdEditoraRemover.setColumns(10);
-		
+
 		JLabel lblDigiteONmero_2 = new JLabel("Digite o número de ID da editora que deseja remover");
 		lblDigiteONmero_2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDigiteONmero_2.setBounds(250, 100, 300, 20);
 		removeEditora.add(lblDigiteONmero_2);
-		
+
 		JButton botaoEditoraDeletar = new JButton("Deletar");
+		botaoEditoraDeletar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja deletar a editora?") == 0) {
+					try {
+						ctrlEditora.remove(Integer.parseInt(inputIdEditoraRemover.getText()));
+						inputIdEditoraRemover.setText(null);
+					} catch (Exception e1) {
+						e1.getMessage();
+					}
+
+				};
+			}
+		});
 		botaoEditoraDeletar.setFont(new Font("Arial", Font.BOLD, 15));
 		botaoEditoraDeletar.setForeground(Color.RED);
 		botaoEditoraDeletar.setBounds(350, 250, 100, 30);
 		removeEditora.add(botaoEditoraDeletar);
-		
+
 		JLabel lblRemoverUmaEditora = new JLabel("Remover uma Editora");
 		lblRemoverUmaEditora.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRemoverUmaEditora.setBounds(325, 30, 150, 20);
@@ -572,37 +668,24 @@ public class principal {
 		final JPanel listagemLivros = new JPanel();
 		frame.getContentPane().add(listagemLivros, "name_77455821168700");
 		listagemLivros.setLayout(null);
-		
+
 		final JPanel listagemEditoras = new JPanel();
 		frame.getContentPane().add(listagemEditoras, "name_82677825720700");
 		listagemEditoras.setLayout(null);
-		
+
 		JScrollPane scrollPaneEditora = new JScrollPane();
 		scrollPaneEditora.setBounds(125, 25, 550, 250);
 		listagemEditoras.add(scrollPaneEditora);
-		
+
 		tabelaListagemEditoras = new JTable();
 		scrollPaneEditora.setColumnHeaderView(tabelaListagemEditoras);
-		
+		scrollPaneEditora.setViewportView(tabelaListagemEditoras);
 
 		JButton btnShowData = new JButton("Update");
 		btnShowData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				JOptionPane.showMessageDialog(null, "Fui clicado, mas não faço nada ainda\n VAI MENGÃO!!!!");
 			}
-				/*ResultSet rs = ctrlLivro.listagemLivros();
-				DefaultTableModel tm = (DefaultTableModel) table.getModel();
-				tm.setRowCount(0);
-				try {
-					while (rs.next()) {
-						Object o[] = { rs.getString(1), rs.getDouble(2), rs.getString(3), rs.getInt(4) };
-						tm.addRow(o);
-					}
-				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null, "Erro: " + e1.getMessage());
-					e1.printStackTrace();
-				}
-			}*/
 		});
 		btnShowData.setBounds(515, 315, 100, 30);
 		listagemLivros.add(btnShowData);
@@ -613,15 +696,15 @@ public class principal {
 
 		tabelaListagemLivros = new JTable();
 		scrollPaneLivros.setViewportView(tabelaListagemLivros);
-		
+
 		final JPanel listagemAutores = new JPanel();
 		frame.getContentPane().add(listagemAutores, "name_80075796613800");
 		listagemAutores.setLayout(null);
-		
+
 		JScrollPane scrollPaneAutor = new JScrollPane();
 		scrollPaneAutor.setBounds(125, 25, 550, 250);
 		listagemAutores.add(scrollPaneAutor);
-		
+
 		tabelaListagemAutores = new JTable();
 		scrollPaneAutor.setViewportView(tabelaListagemAutores);
 		initializationPanel.setVisible(true);
@@ -691,12 +774,13 @@ public class principal {
 
 		JMenu menuAutor = new JMenu("Autores");
 		menuBar.add(menuAutor);
-		
+
 		JMenuItem mntmListagem = new JMenuItem("Listagem");
 		mntmListagem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				disablePanels(frame.getContentPane());
 				listagemAutores.setVisible(true);
+				createListAuthors();
 			}
 		});
 		menuAutor.add(mntmListagem);
@@ -730,12 +814,13 @@ public class principal {
 
 		JMenu menuEditora = new JMenu("Editoras");
 		menuBar.add(menuEditora);
-		
+
 		JMenuItem menuEditoraListagem = new JMenuItem("Listagem");
 		menuEditoraListagem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				disablePanels(frame.getContentPane());
 				listagemEditoras.setVisible(true);
+				createListEditors();
 			}
 		});
 		menuEditora.add(menuEditoraListagem);
@@ -768,8 +853,10 @@ public class principal {
 		menuEditora.add(menuEditoraRemove);
 
 		disablePanels(frame.getContentPane());
-		
+
 	}
+
+	// **** Método que popula a combobox das Editoras ****
 
 	private void configuraComboBox(JComboBox comboBox) {
 		try {
@@ -786,17 +873,21 @@ public class principal {
 
 	}
 
+	// ***************************************************
+
+	// **** Métodos de criação das tabelas *****
+
 	private void createListTable() {
 		DefaultTableModel model = new DefaultTableModel();
 		model.addColumn("Titulo");
 		model.addColumn("Preço");
 		model.addColumn("ISBN");
-		model.addColumn("Id Editora");
+		model.addColumn("Editora");
 		ResultSet rs = ctrlLivro.listagemLivros();
 
 		try {
 			while (rs.next()) {
-				model.addRow(new Object[] { rs.getString(1), rs.getDouble(2), rs.getString(3), rs.getInt(4) });
+				model.addRow(new Object[] { rs.getString(1), rs.getDouble(2), rs.getString(3), rs.getString(4) });
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -804,16 +895,6 @@ public class principal {
 		tabelaListagemLivros.setModel(model);
 	}
 
-	private void disablePanels(Container frame) {
-		Component[] components = frame.getComponents();
-
-		if (components.length > 0) {
-			for (Component component : components) {
-				((JPanel) component).setVisible(false);
-			}
-		}
-	}
-	
 	private void createListAuthors() {
 		DefaultTableModel model = new DefaultTableModel();
 		model.addColumn("Nome");
@@ -830,4 +911,37 @@ public class principal {
 		}
 		tabelaListagemAutores.setModel(model);
 	}
+
+	private void createListEditors() {
+		DefaultTableModel model = new DefaultTableModel();
+		model.addColumn("Nome");
+		model.addColumn("URL");
+		model.addColumn("ID da Editora");
+		ResultSet rs = ctrlEditora.listagemEditoras();
+
+		try {
+			while (rs.next()) {
+				model.addRow(new Object[] { rs.getString(2), rs.getString(3), rs.getInt(1) });
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		tabelaListagemEditoras.setModel(model);
+	}
+
+	// *******************************************
+
+	// ** Método para ocultar panels que não estão em uso**
+
+	private void disablePanels(Container frame) {
+		Component[] components = frame.getComponents();
+
+		if (components.length > 0) {
+			for (Component component : components) {
+				((JPanel) component).setVisible(false);
+			}
+		}
+	}
+
+	// *******************************************
 }

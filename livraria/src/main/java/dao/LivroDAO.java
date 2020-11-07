@@ -38,7 +38,7 @@ public class LivroDAO extends DAORoot {
     	
     	ResultSet rs = null;
         try {
-            String sql = "SELECT * FROM books";
+            String sql = "SELECT b.title, b.price, b.isbn, e.nome  FROM books b JOIN publishers e ON b.publisher_id = id_editora";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.execute();
             
