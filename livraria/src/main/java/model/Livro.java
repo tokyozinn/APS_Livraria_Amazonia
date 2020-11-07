@@ -28,7 +28,7 @@ public class Livro {
 	public Double getPreco() {
 		return preco;
 	}
-	public void setPreço(Double preco) {
+	public void setPreco(Double preco) {
 		this.preco = preco;
 	}
 

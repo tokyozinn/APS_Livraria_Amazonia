@@ -184,7 +184,7 @@ public class principal {
 
 					l.setTitulo(inputNomeLivro.getText());
 					l.setIsbn(inputISBNLivro.getText());
-					l.setPreço(Double.parseDouble(inputPrecoLivro.getText()));
+					l.setPreco(Double.parseDouble(inputPrecoLivro.getText()));
 
 					ctrlLivro.adicionaLivro(l);
 					JOptionPane.showMessageDialog(null, "Livro cadastrado com sucesso!");
