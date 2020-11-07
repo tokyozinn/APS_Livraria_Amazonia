@@ -271,9 +271,14 @@ public class principal {
 		btnDeletar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja deletar o livro?") == 0) {
-					ctrlLivro.remove(inputIsbnLivroDeletar.getText());
-					JOptionPane.showMessageDialog(null, "Livro removido com sucesso!");
-					inputIsbnLivroDeletar.setText(null);
+					try {
+						ctrlLivro.remove(inputIsbnLivroDeletar.getText());
+						JOptionPane.showMessageDialog(null, "Livro removido com sucesso!");
+						inputIsbnLivroDeletar.setText(null);
+					} catch (Exception e1) {
+						e1.getMessage();
+					}
+
 				}
 				;
 			}

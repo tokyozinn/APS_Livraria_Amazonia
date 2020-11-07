@@ -41,7 +41,7 @@ public class ControllerLivros {
 		return dao.mostraLivro();
 	}
 	
-	public void remove(String s) {
+	public void remove(String s) throws Exception {
 		dao.removeLivro(s);
 	}
 	

@@ -50,18 +50,20 @@ public class LivroDAO extends DAORoot {
         }
     }
     
-    public void removeLivro(String s) {
+    public void removeLivro(String s) throws Exception {
     	String sql = "DELETE FROM books WHERE isbn = ?";
     	PreparedStatement ps;
 		try {
 			ps = con.prepareStatement(sql);
 	    	ps.setString(1, s);
-	    	ps.execute();
 	    	
+	    	if(ps.executeUpdate() < 1) {
+	    		JOptionPane.showMessageDialog(null, "Não foi possível localizar o livro");
+	    		throw new Exception();
+	    	}
 	    	ps.close();
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
-			e.printStackTrace();
 		}
 
     }
